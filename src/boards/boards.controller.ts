@@ -6,18 +6,17 @@ import {
   Param,
   Patch,
   Post,
-  UsePipes,
-  ValidationPipe,
 } from '@nestjs/common';
 import { BoardsService } from './boards.service';
-import { Board, BoradStatus } from './boards.model';
+import { Board, BoardStatus } from './boards.model';
 import { CreateBoardDto } from './dto/create-board.dto';
+import { BoardStatusValidationPipe } from './pipe/board-stauts-validation.pipe';
 
 @Controller('boards')
 export class BoardsController {
   constructor(private boardsService: BoardsService) {}
 
-  @Get('/')
+  @Get('')
   gatAllBoards(): Board[] {
     return this.boardsService.getAllBoards();
   }
@@ -41,7 +40,7 @@ export class BoardsController {
   @Patch('/:id/status')
   updateBoardStatus(
     @Param('id') id: string,
-    @Body('status') status: BoradStatus,
+    @Body('status', BoardStatusValidationPipe) status: BoardStatus,
   ) {
     return this.boardsService.updateBoardStatus(id, status);
   }
